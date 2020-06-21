@@ -12,6 +12,14 @@ public class Player : Agent
     public bool isDetected;
     public int speed;
 
+
+
+    private void Update()
+    {
+        if (isDetected)
+            RequestDecision();
+         
+    }
     public override void Initialize()
     {
         rb = GetComponent<Rigidbody>();
@@ -19,6 +27,8 @@ public class Player : Agent
         Initial_rotation = transform.rotation;
 
     }
+
+   
     public override void Heuristic(float[] actionsOut)
     {
             actionsOut[0] = 0;
@@ -33,12 +43,21 @@ public class Player : Agent
         Debug.Log("<color=green> received = </color>" + received);
         if (Mathf.FloorToInt(received) == 1)
         {
+            isDetected = false;
             Jump();
         }
     }
     public override void OnEpisodeBegin()
     {
         reset();
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Gnd")
+        {
+            isDetected = true;
+        }
     }
 
 
